@@ -1,2 +1,2 @@
-# For_finalclass_paper
+# 김원준_졸업논문
 졸업논문 기록 남기기용
