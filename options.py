@@ -92,12 +92,23 @@ class MonodepthOptions:
                                  default=32)
         self.parser.add_argument("--height",
                                  type=int,
-                                 help="input image height",
+                                 help="input image height_high",
                                  default=320)
         self.parser.add_argument("--width",
                                  type=int,
-                                 help="input image width",
+                                 help="input image width_high",
                                  default=1024)
+
+        # For multi resolution , add low_resolution height, width
+        self.parser.add_argument("--height_low",
+                                 type=int,
+                                 help="input image height_low",
+                                 default=192)
+        self.parser.add_argument("--width_low",
+                                 type=int,
+                                 help="input image width_low",
+                                 default=640)
+
         self.parser.add_argument("--reg_wt",
                                  type=float,
                                  help="regularization term weight",
