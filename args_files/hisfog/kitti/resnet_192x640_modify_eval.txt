@@ -1,0 +1,23 @@
+--data_path /home/kty2/Lite-mono_code/kitti_data/
+--log_dir /home/kty2/SQLdepth/logs
+--load_weights_folder /home/kty2/SQLdepth/logs/sqldepth_res_192x640/models/weights_15
+--model_name sqldepth_res_192x640
+--dataset kitti
+--eval_split eigen
+--backbone resnet_lite
+--height 192
+--width 640
+--batch_size 16
+--num_epochs 20
+--scheduler_step_size 15
+--num_layers 50
+--num_features 256
+--model_dim 32
+--patch_size 16
+--dim_out 64
+--query_nums 64
+--min_depth 0.001
+--max_depth 80.0
+--use_stereo
+--eval_mono
+--post_process
