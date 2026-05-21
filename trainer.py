@@ -94,6 +94,12 @@ class Trainer:
         # self.models["depth"].to(self.device)
         self.parameters_to_train += list(self.models["depth"].parameters())
 
+        # Added to fusion High resol & Low resol
+        self.models["fusion"] = networks.MultiResFusion(in_channels=self.opt.model_dim)
+        self.models["fusion"] = self.models["fusion"].cuda()
+        self.models["fusion"] = torch.nn.DataParallel(self.models["fusion"])
+        self.parameters_to_train += list(self.models["fusion"].parameters())
+
 
         self.models["pose"] = networks.PoseCNN(
             self.num_input_frames if self.opt.pose_model_input == "all" else 2) # default=2
@@ -283,10 +289,21 @@ class Trainer:
             outputs = self.models["depth"](features[0])
         else:
             # Otherwise, we only feed the image with frame_id 0 through the depth encoder
-            features = self.models["encoder"](inputs["color_aug", 0, 0])
+            # Added to get high_resol_feature, Low_resol_feature, and merge it and get Depth.
+            High_feature= self.models["encoder"](inputs["color_aug", 0, 0]) #320*1040
+            Low_resol = F.interpolate(inputs["color_aug", 0, 0],
+                          size=(self.opt.height_low, self.opt.width_low),
+                          mode='bilinear', align_corners=False) # 192x640
+            Low_feature = self.models["encoder"](Low_resol) 
+            #Here, We get each resolutions's feature map. 
 
-            outputs = self.models["depth"](features)
+            Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:], mode='bilinear', align_corners=False)
+            # Do upsampling to low_feature to make size equel
 
+            Merged_feature = self.models["fusion"](High_feature,Low_feature_up)
+
+            outputs = self.models["depth"](Merged_feature)
+            
         if self.opt.predictive_mask: # default no
             outputs["predictive_mask"] = self.models["predictive_mask"](features)
         # self.use_pose_net = not (self.opt.use_stereo and self.opt.frame_ids == [0])
