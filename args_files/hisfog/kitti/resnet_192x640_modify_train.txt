@@ -1,11 +1,13 @@
 --data_path /home/kty2/Lite-mono_code/kitti_data/
 --log_dir /home/kty2/SQLdepth/logs
---model_name sqldepth_res_192x640
+--model_name sqldepth_multiRes_0523-1
 --dataset kitti
 --eval_split eigen
 --backbone resnet_lite
---height 192
---width 640
+--height_low 192
+--width_low 640
+--height 320
+--width 1040
 --batch_size 16
 --num_epochs 20
 --scheduler_step_size 15

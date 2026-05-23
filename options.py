@@ -90,6 +90,8 @@ class MonodepthOptions:
                                  type=int,
                                  help="model dim",
                                  default=32)
+        # For multi resolution , changed to height, width
+
         self.parser.add_argument("--height",
                                  type=int,
                                  help="input image height_high",
