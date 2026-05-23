@@ -279,6 +279,7 @@ class MonodepthOptions:
         self.parser.add_argument("--no_cuda",
                                  help="if set disables CUDA",
                                  action="store_true")
+        # 0523, chagned from 8 -> 4 cause of we are lacking of ram while using Seperate ver
         self.parser.add_argument("--num_workers",
                                  type=int,
                                  help="number of dataloader workers",
