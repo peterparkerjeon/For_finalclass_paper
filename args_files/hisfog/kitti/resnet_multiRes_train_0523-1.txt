@@ -7,7 +7,7 @@
 --height_low 192
 --width_low 640
 --height 320
---width 1040
+--width 1024
 --batch_size 8
 --num_epochs 20
 --scheduler_step_size 15
