@@ -289,6 +289,7 @@ class Trainer:
             outputs = self.models["depth"](features[0])
         else:
             # Otherwise, we only feed the image with frame_id 0 through the depth encoder
+            
             # Added to get high_resol_feature, Low_resol_feature, and merge it and get Depth.
             High_feature= self.models["encoder"](inputs["color_aug", 0, 0]) #320*1040
             Low_resol = F.interpolate(inputs["color_aug", 0, 0],
