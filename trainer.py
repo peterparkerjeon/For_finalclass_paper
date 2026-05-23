@@ -10,6 +10,7 @@ import torch.optim as optim
 from torch.utils.data import DataLoader
 # from tensorboardX import SummaryWriter
 from torch.utils.tensorboard.writer import SummaryWriter
+from torch.utils.checkpoint import checkpoint # We use graident checkpoint for utilizing memory
 
 import json
 
@@ -54,26 +55,60 @@ class Trainer:
 
         # self.models["encoder"] = networks.BaseEncoder.build(num_features=self.opt.num_features, model_dim=self.opt.model_dim)
         # self.models["encoder"] = networks.ResnetEncoderDecoder(num_layers=self.opt.num_layers, num_features=self.opt.num_features, model_dim=self.opt.model_dim)
-        if self.opt.backbone in ["resnet", "resnet_lite"]:
-            self.models["encoder"] = networks.ResnetEncoderDecoder(num_layers=self.opt.num_layers, num_features=self.opt.num_features, model_dim=self.opt.model_dim)
-        elif self.opt.backbone == "resnet18_lite":
-            self.models["encoder"] = networks.LiteResnetEncoderDecoder(model_dim=self.opt.model_dim)
-        elif self.opt.backbone == "eff_b5":
-            self.models["encoder"] = networks.BaseEncoder.build(num_features=self.opt.num_features, model_dim=self.opt.model_dim)
-        else: 
-            self.models["encoder"] = networks.Unet(pretrained=(not self.opt.load_pretrained_model), backbone=self.opt.backbone, in_channels=3, num_classes=self.opt.model_dim, decoder_channels=self.opt.dec_channels)
+        # if self.opt.backbone in ["resnet", "resnet_lite"]:
+        
+        #     self.models["encoder"] = networks.ResnetEncoderDecoder(num_layers=self.opt.num_layers, num_features=self.opt.num_features, model_dim=self.opt.model_dim)
+        # elif self.opt.backbone == "resnet18_lite":
+        #     self.models["encoder"] = networks.LiteResnetEncoderDecoder(model_dim=self.opt.model_dim)
+        # elif self.opt.backbone == "eff_b5":
+        #     self.models["encoder"] = networks.BaseEncoder.build(num_features=self.opt.num_features, model_dim=self.opt.model_dim)
+        # else: 
+        #     self.models["encoder"] = networks.Unet(pretrained=(not self.opt.load_pretrained_model), backbone=self.opt.backbone, in_channels=3, num_classes=self.opt.model_dim, decoder_channels=self.opt.dec_channels)
 
+        # self.models["encoder"] = self.models["encoder"].cuda()
+        # self.models["encoder"] = torch.nn.DataParallel(self.models["encoder"]) 
+        # # self.models["encoder"].to(self.device)
+        # self.parameters_to_train += list(self.models["encoder"].parameters())
+
+    
+        # Here, make two seperate Encoder for High-resolution, Low-resolution
+        # For High-resolution CNN
+        # Make encoder named "encoder_high"
+        if self.opt.backbone in ["resnet", "resnet_lite"]:
+            self.models["encoder_high"] = networks.ResnetEncoderDecoder(num_layers=self.opt.num_layers, num_features=self.opt.num_features, model_dim=self.opt.model_dim)
+        elif self.opt.backbone == "resnet18_lite":
+            self.models["encoder_high"] = networks.LiteResnetEncoderDecoder(model_dim=self.opt.model_dim)
+        elif self.opt.backbone == "eff_b5":
+            self.models["encoder_high"] = networks.BaseEncoder.build(num_features=self.opt.num_features, model_dim=self.opt.model_dim)
+        else:
+            self.models["encoder_high"] = networks.Unet(pretrained=(not self.opt.load_pretrained_model), backbone=self.opt.backbone, in_channels=3, num_classes=self.opt.model_dim, decoder_channels=self.opt.dec_channels)
+        self.models["encoder_high"] = self.models["encoder_high"].cuda()
+        self.models["encoder_high"] = torch.nn.DataParallel(self.models["encoder_high"])
+        self.parameters_to_train += list(self.models["encoder_high"].parameters())
+
+
+        # For Low-resolution CNN
+        # Make encoder named "encoder_low"
+        if self.opt.backbone in ["resnet", "resnet_lite"]:
+            self.models["encoder_low"] = networks.ResnetEncoderDecoder(num_layers=self.opt.num_layers, num_features=self.opt.num_features, model_dim=self.opt.model_dim)
+        elif self.opt.backbone == "resnet18_lite":
+            self.models["encoder_low"] = networks.LiteResnetEncoderDecoder(model_dim=self.opt.model_dim)
+        elif self.opt.backbone == "eff_b5":
+            self.models["encoder_low"] = networks.BaseEncoder.build(num_features=self.opt.num_features, model_dim=self.opt.model_dim)
+        else:
+            self.models["encoder_low"] = networks.Unet(pretrained=(not self.opt.load_pretrained_model), backbone=self.opt.backbone, in_channels=3, num_classes=self.opt.model_dim, decoder_channels=self.opt.dec_channels)
+        self.models["encoder_low"] = self.models["encoder_low"].cuda()
+        self.models["encoder_low"] = torch.nn.DataParallel(self.models["encoder_low"])
+        self.parameters_to_train += list(self.models["encoder_low"].parameters())
+
+
+        # this if for pretrained Encoder
         if self.opt.load_pretrained_model:
             print("-> Loading pretrained encoder from ", self.opt.load_pt_folder)
             encoder_path = os.path.join(self.opt.load_pt_folder, "encoder.pth")
             loaded_dict_enc = torch.load(encoder_path, map_location=self.device)
             filtered_dict_enc = {k: v for k, v in loaded_dict_enc.items() if k in self.models["encoder"].state_dict()}
             self.models["encoder"].load_state_dict(filtered_dict_enc)
-
-        self.models["encoder"] = self.models["encoder"].cuda()
-        self.models["encoder"] = torch.nn.DataParallel(self.models["encoder"]) 
-        # self.models["encoder"].to(self.device)
-        self.parameters_to_train += list(self.models["encoder"].parameters())
 
         if self.opt.backbone.endswith("_lite"):
             self.models["depth"] = networks.Lite_Depth_Decoder_QueryTr(in_channels=self.opt.model_dim, patch_size=self.opt.patch_size, dim_out=self.opt.dim_out, embedding_dim=self.opt.model_dim, 
@@ -290,11 +325,12 @@ class Trainer:
         else:
             # Otherwise, we only feed the image with frame_id 0 through the depth encoder
             # Added to get high_resol_feature, Low_resol_feature, and merge it and get Depth.
-            High_feature= self.models["encoder"](inputs["color_aug", 0, 0]) #320*1040
+            # Use different encoder for high, low => Seperate!
+            High_feature = checkpoint( self.models["encoder_high"], inputs["color_aug", 0, 0] ) #320*1040
             Low_resol = F.interpolate(inputs["color_aug", 0, 0],
                           size=(self.opt.height_low, self.opt.width_low),
                           mode='bilinear', align_corners=False) # 192x640
-            Low_feature = self.models["encoder"](Low_resol) 
+            Low_feature = checkpoint(self.models["encoder_low"], Low_resol) 
             #Here, We get each resolutions's feature map. 
 
             Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:], mode='bilinear', align_corners=False)
@@ -303,7 +339,7 @@ class Trainer:
             Merged_feature = self.models["fusion"](High_feature,Low_feature_up)
 
             outputs = self.models["depth"](Merged_feature)
-            
+
             features = High_feature  # just for process_batch function, it don't have any role in our setting
             
         if self.opt.predictive_mask: # default no
@@ -668,10 +704,17 @@ class Trainer:
                to_save = model.state_dict()
             else:
                 to_save = model.module.state_dict()
-            if model_name == 'encoder':
+
+            # Seperate Encoder high, low
+            if model_name == 'encoder_high':
                 # save the sizes - these are needed at prediction time
                 to_save['height'] = self.opt.height
                 to_save['width'] = self.opt.width
+                to_save['use_stereo'] = self.opt.use_stereo
+            if model_name == 'encoder_low':
+                # save the sizes - these are needed at prediction time
+                to_save['height'] = self.opt.height_low
+                to_save['width'] = self.opt.width_low
                 to_save['use_stereo'] = self.opt.use_stereo
             torch.save(to_save, save_path)
 
