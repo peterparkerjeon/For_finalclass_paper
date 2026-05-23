@@ -289,7 +289,6 @@ class Trainer:
             outputs = self.models["depth"](features[0])
         else:
             # Otherwise, we only feed the image with frame_id 0 through the depth encoder
-            
             # Added to get high_resol_feature, Low_resol_feature, and merge it and get Depth.
             High_feature= self.models["encoder"](inputs["color_aug", 0, 0]) #320*1040
             Low_resol = F.interpolate(inputs["color_aug", 0, 0],
@@ -304,6 +303,8 @@ class Trainer:
             Merged_feature = self.models["fusion"](High_feature,Low_feature_up)
 
             outputs = self.models["depth"](Merged_feature)
+            
+            features = High_feature  # just for process_batch function, it don't have any role in our setting
             
         if self.opt.predictive_mask: # default no
             outputs["predictive_mask"] = self.models["predictive_mask"](features)
