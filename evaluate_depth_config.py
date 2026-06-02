@@ -221,9 +221,12 @@ def evaluate(opt):
                 Low_resol     = F.interpolate(input_color, size=(opt.height_low, opt.width_low),
                                             mode='bilinear', align_corners=False)
                 Low_feature   = encoder_low(Low_resol)
-                Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:],
-                                                mode='bilinear', align_corners=False)
-                Merged_feature = fusion(High_feature, Low_feature_up)
+                #Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:],
+                                                #mode='bilinear', align_corners=False)
+                #Merged_feature = fusion(High_feature, Low_feature_up)
+                Merged_feature = fusion(High_feature, Low_feature)
+
+
                 output         = depth_decoder(Merged_feature)
                 #Until here
 

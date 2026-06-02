@@ -130,7 +130,7 @@ class Trainer:
         self.parameters_to_train += list(self.models["depth"].parameters())
 
         # Added to fusion High resol & Low resol
-        self.models["fusion"] = networks.MultiResFusion(in_channels=self.opt.model_dim)
+        self.models["fusion"] = networks.MultiResFusion(in_channels=self.opt.model_dim, debug=True)
         self.models["fusion"] = self.models["fusion"].cuda()
         self.models["fusion"] = torch.nn.DataParallel(self.models["fusion"])
         self.parameters_to_train += list(self.models["fusion"].parameters())
@@ -354,10 +354,8 @@ class Trainer:
             Low_feature = checkpoint(self.models["encoder_low"], Low_resol) 
             #Here, We get each resolutions's feature map. 
 
-            Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:], mode='bilinear', align_corners=False)
-            # Do upsampling to low_feature to make size equel
+            Merged_feature = self.models["fusion"](High_feature, Low_feature)
 
-            Merged_feature = self.models["fusion"](High_feature,Low_feature_up)
 
             outputs = self.models["depth"](Merged_feature)
 
