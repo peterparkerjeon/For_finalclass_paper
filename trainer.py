@@ -130,7 +130,7 @@ class Trainer:
         self.parameters_to_train += list(self.models["depth"].parameters())
 
         # Added to fusion High resol & Low resol
-        self.models["fusion"] = networks.MultiResFusion(in_channels=self.opt.model_dim, debug=True)
+        self.models["fusion"] = networks.MultiResFusion(in_channels=self.opt.model_dim)
         self.models["fusion"] = self.models["fusion"].cuda()
         self.models["fusion"] = torch.nn.DataParallel(self.models["fusion"])
         self.parameters_to_train += list(self.models["fusion"].parameters())
