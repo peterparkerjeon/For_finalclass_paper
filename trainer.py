@@ -274,6 +274,10 @@ class Trainer:
         print("Training")
         self.set_train()
 
+        #accumulation_steps = 2  # For Gradient Accumulation, Added. We will set batch = 8 , 8*2 = 16. Target Batch = 16
+        #self.model_optimizer.zero_grad() # For Gradient Accumulation, Added
+
+
         for batch_idx, inputs in enumerate(self.train_loader):
 
             before_op_time = time.time()
@@ -281,9 +285,20 @@ class Trainer:
 
             outputs, losses = self.process_batch(inputs)
 
+            # Removed For Gradient Accumulation => we get it back.
             self.model_optimizer.zero_grad()
             losses["loss"].backward()
             self.model_optimizer.step()
+
+            # # For Gradient Accumulation, Added. 
+            # loss_value = losses["loss"]
+            # (loss_value / accumulation_steps).backward()
+            # if (batch_idx + 1) % accumulation_steps == 0 or \
+            # (batch_idx + 1) == len(self.train_loader):
+            #     self.model_optimizer.step()
+            #     self.model_optimizer.zero_grad()
+            # Until here!
+
 
             duration = time.time() - before_op_time
 
@@ -327,7 +342,7 @@ class Trainer:
             # Otherwise, we only feed the image with frame_id 0 through the depth encoder
             # Added to get high_resol_feature, Low_resol_feature, and merge it and get Depth.
             # Use different encoder for high, low => Seperate!
-            High_feature = checkpoint( self.models["encoder_high"], inputs["color_aug", 0, 0] ) #320*1040
+            High_feature = checkpoint( self.models["encoder_high"], inputs["color_aug", 0, 0]) #320*1040
             Low_resol = F.interpolate(inputs["color_aug", 0, 0],
                           size=(self.opt.height_low, self.opt.width_low),
                           mode='bilinear', align_corners=False) # 192x640
