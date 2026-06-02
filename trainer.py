@@ -278,6 +278,7 @@ class Trainer:
 
             before_op_time = time.time()
 
+
             outputs, losses = self.process_batch(inputs)
 
             self.model_optimizer.zero_grad()
