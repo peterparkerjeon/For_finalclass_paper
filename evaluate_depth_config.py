@@ -9,6 +9,8 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
+import torch.nn.functional as F #Added For MultiRes
+
 from layers import disp_to_depth
 from utils import readlines
 from options import MonodepthOptions
@@ -78,50 +80,129 @@ def evaluate(opt):
         print("-> Loading weights from {}".format(opt.load_weights_folder))
 
         filenames = readlines(os.path.join(splits_dir, opt.eval_split, "test_files.txt"))
-        encoder_path = os.path.join(opt.load_weights_folder, "encoder.pth")
+        #encoder_path = os.path.join(opt.load_weights_folder, "encoder.pth") #original
+        
+        # Added For Multires
+        encoder_high_path = os.path.join(opt.load_weights_folder, "encoder_high.pth")
+        encoder_low_path  = os.path.join(opt.load_weights_folder, "encoder_low.pth")
+        fusion_path       = os.path.join(opt.load_weights_folder, "fusion.pth")
+
         decoder_path = os.path.join(opt.load_weights_folder, "depth.pth")
 
-        encoder_dict = torch.load(encoder_path)
+        encoder_high_dict = torch.load(encoder_high_path) # Added For Multires
 
         dataset = datasets.KITTIRAWDataset(opt.data_path, filenames,
-                                           encoder_dict['height'], encoder_dict['width'],
-                                           [0], 1, is_train=False)
+                                   encoder_high_dict['height'], encoder_high_dict['width'],
+                                   [0], 1, is_train=False)
+
+        # encoder_dict = torch.load(encoder_path) # original
+
+        # dataset = datasets.KITTIRAWDataset(opt.data_path, filenames,
+        #                                    encoder_dict['height'], encoder_dict['width'],
+        #                                    [0], 1, is_train=False) # original
+
+
+
         dataloader = DataLoader(dataset, 1, shuffle=False, num_workers=opt.num_workers,
                                 pin_memory=True, drop_last=False)
+        
 
+        # original
+        # if opt.backbone in ["resnet", "resnet_lite"]:
+        #     encoder = networks.ResnetEncoderDecoder(num_layers=opt.num_layers, num_features=opt.num_features, model_dim=opt.model_dim)
+        # elif opt.backbone == "resnet18_lite":
+        #     encoder = networks.LiteResnetEncoderDecoder(model_dim=opt.model_dim)
+        # elif opt.backbone == "eff_b5":
+        #     encoder = networks.BaseEncoder.build(num_features=opt.num_features, model_dim=opt.model_dim)
+        # else: 
+        #     encoder = networks.Unet(pretrained=(not opt.load_pretrained_model), backbone=opt.backbone, in_channels=3, num_classes=opt.model_dim, decoder_channels=opt.dec_channels)
+
+        # if opt.backbone.endswith("_lite"):
+        #     depth_decoder = networks.Lite_Depth_Decoder_QueryTr(in_channels=opt.model_dim, patch_size=opt.patch_size, dim_out=opt.dim_out, embedding_dim=opt.model_dim, 
+        #                                                 query_nums=opt.query_nums, num_heads=4, min_val=opt.min_depth, max_val=opt.max_depth)
+        # else:
+        #     depth_decoder = networks.Depth_Decoder_QueryTr(in_channels=opt.model_dim, patch_size=opt.patch_size, dim_out=opt.dim_out, embedding_dim=opt.model_dim, 
+        #                                            query_nums=opt.query_nums, num_heads=4, min_val=opt.min_depth, max_val=opt.max_depth)
+
+
+
+        # Added For Multires
         if opt.backbone in ["resnet", "resnet_lite"]:
-            encoder = networks.ResnetEncoderDecoder(num_layers=opt.num_layers, num_features=opt.num_features, model_dim=opt.model_dim)
+            encoder_high = networks.ResnetEncoderDecoder(num_layers=opt.num_layers, num_features=opt.num_features, model_dim=opt.model_dim)
+            encoder_low  = networks.ResnetEncoderDecoder(num_layers=opt.num_layers, num_features=opt.num_features, model_dim=opt.model_dim)
         elif opt.backbone == "resnet18_lite":
-            encoder = networks.LiteResnetEncoderDecoder(model_dim=opt.model_dim)
+            encoder_high = networks.LiteResnetEncoderDecoder(model_dim=opt.model_dim)
+            encoder_low  = networks.LiteResnetEncoderDecoder(model_dim=opt.model_dim)
         elif opt.backbone == "eff_b5":
-            encoder = networks.BaseEncoder.build(num_features=opt.num_features, model_dim=opt.model_dim)
-        else: 
-            encoder = networks.Unet(pretrained=(not opt.load_pretrained_model), backbone=opt.backbone, in_channels=3, num_classes=opt.model_dim, decoder_channels=opt.dec_channels)
+            encoder_high = networks.BaseEncoder.build(num_features=opt.num_features, model_dim=opt.model_dim)
+            encoder_low  = networks.BaseEncoder.build(num_features=opt.num_features, model_dim=opt.model_dim)
+        else:
+            encoder_high = networks.Unet(pretrained=False, backbone=opt.backbone, in_channels=3, num_classes=opt.model_dim, decoder_channels=opt.dec_channels)
+            encoder_low  = networks.Unet(pretrained=False, backbone=opt.backbone, in_channels=3, num_classes=opt.model_dim, decoder_channels=opt.dec_channels)
 
         if opt.backbone.endswith("_lite"):
-            depth_decoder = networks.Lite_Depth_Decoder_QueryTr(in_channels=opt.model_dim, patch_size=opt.patch_size, dim_out=opt.dim_out, embedding_dim=opt.model_dim, 
+            depth_decoder = networks.Lite_Depth_Decoder_QueryTr(in_channels=opt.model_dim, patch_size=opt.patch_size, dim_out=opt.dim_out, embedding_dim=opt.model_dim,
                                                         query_nums=opt.query_nums, num_heads=4, min_val=opt.min_depth, max_val=opt.max_depth)
         else:
-            depth_decoder = networks.Depth_Decoder_QueryTr(in_channels=opt.model_dim, patch_size=opt.patch_size, dim_out=opt.dim_out, embedding_dim=opt.model_dim, 
-                                                   query_nums=opt.query_nums, num_heads=4, min_val=opt.min_depth, max_val=opt.max_depth)
+            depth_decoder = networks.Depth_Decoder_QueryTr(in_channels=opt.model_dim, patch_size=opt.patch_size, dim_out=opt.dim_out, embedding_dim=opt.model_dim,
+                                                    query_nums=opt.query_nums, num_heads=4, min_val=opt.min_depth, max_val=opt.max_depth)
+        fusion = networks.MultiResFusion(in_channels=opt.model_dim)
 
-        model_dict = encoder.state_dict()
-        encoder.load_state_dict({k: v for k, v in encoder_dict.items() if k in model_dict})
+
+        # Added For Multires
+        model_dict_high = encoder_high.state_dict()
+        encoder_high.load_state_dict({k: v for k, v in encoder_high_dict.items() if k in model_dict_high})
+
+        model_dict_low = encoder_low.state_dict()
+        encoder_low_dict = torch.load(encoder_low_path)
+        encoder_low.load_state_dict({k: v for k, v in encoder_low_dict.items() if k in model_dict_low})
+
+        fusion.load_state_dict(torch.load(fusion_path))
         depth_decoder.load_state_dict(torch.load(decoder_path))
 
-        encoder.cuda()
-        encoder = torch.nn.DataParallel(encoder)
-        encoder.eval()
+        encoder_high.cuda()
+        encoder_high = torch.nn.DataParallel(encoder_high)
+        encoder_high.eval()
+
+        encoder_low.cuda()
+        encoder_low = torch.nn.DataParallel(encoder_low)
+        encoder_low.eval()
+
+        fusion.cuda()
+        fusion = torch.nn.DataParallel(fusion)
+        fusion.eval()
+
         depth_decoder.cuda()
         depth_decoder = torch.nn.DataParallel(depth_decoder)
         depth_decoder.eval()
+        # Until Here!
+
+
+        # Original
+        # model_dict = encoder.state_dict()
+        # encoder.load_state_dict({k: v for k, v in encoder_dict.items() if k in model_dict})
+        # depth_decoder.load_state_dict(torch.load(decoder_path))
+
+        # encoder.cuda()
+        # encoder = torch.nn.DataParallel(encoder)
+        # encoder.eval()
+        # depth_decoder.cuda()
+        # depth_decoder = torch.nn.DataParallel(depth_decoder)
+        # depth_decoder.eval()
+        # Until here
+
 
         pred_disps = []
         src_imgs = []
         error_maps = []
 
+        # print("-> Computing predictions with size {}x{}".format(
+        #     encoder_dict['width'], encoder_dict['height'])) #original
+
+        
+        # Added For Multires
         print("-> Computing predictions with size {}x{}".format(
-            encoder_dict['width'], encoder_dict['height']))
+            encoder_high_dict['width'], encoder_high_dict['height'])) #original
 
         step = 0
         with torch.no_grad():
@@ -133,7 +214,20 @@ def evaluate(opt):
                     # Post-processed results require each image to have two forward passes
                     input_color = torch.cat((input_color, torch.flip(input_color, [3])), 0)
 
-                output = depth_decoder(encoder(input_color))
+                # output = depth_decoder(encoder(input_color)) #original
+
+                # Added For Multires
+                High_feature  = encoder_high(input_color)
+                Low_resol     = F.interpolate(input_color, size=(opt.height_low, opt.width_low),
+                                            mode='bilinear', align_corners=False)
+                Low_feature   = encoder_low(Low_resol)
+                Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:],
+                                                mode='bilinear', align_corners=False)
+                Merged_feature = fusion(High_feature, Low_feature_up)
+                output         = depth_decoder(Merged_feature)
+                #Until here
+
+
                 if opt.log_attn:
                     attn = output[("attn", 0)]
                     writer = writers["vis"]

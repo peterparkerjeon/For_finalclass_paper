@@ -1,0 +1,238 @@
+=== weights_10 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_10
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.582 | std: 0.057
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.094  &   0.785  &   4.274  &   0.175  &   0.907  &   0.961  &   0.980  \\
+
+-> Done!
+=== weights_11 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_11
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.531 | std: 0.065
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.095  &   0.734  &   4.217  &   0.173  &   0.907  &   0.960  &   0.981  \\
+
+-> Done!
+=== weights_12 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_12
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.467 | std: 0.068
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.093  &   0.720  &   4.184  &   0.174  &   0.908  &   0.959  &   0.980  \\
+
+-> Done!
+=== weights_13 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_13
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.569 | std: 0.065
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.093  &   0.736  &   4.225  &   0.173  &   0.908  &   0.962  &   0.981  \\
+
+-> Done!
+=== weights_14 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_14
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.563 | std: 0.063
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.093  &   0.727  &   4.207  &   0.172  &   0.908  &   0.962  &   0.981  \\
+
+-> Done!
+=== weights_15 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_15
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.531 | std: 0.063
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.090  &   0.712  &   4.150  &   0.170  &   0.911  &   0.961  &   0.981  \\
+
+-> Done!
+=== weights_16 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_16
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.544 | std: 0.064
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.091  &   0.718  &   4.159  &   0.171  &   0.911  &   0.961  &   0.981  \\
+
+-> Done!
+=== weights_17 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_17
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.502 | std: 0.065
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.090  &   0.704  &   4.128  &   0.170  &   0.912  &   0.961  &   0.981  \\
+
+-> Done!
+=== weights_18 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_18
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.514 | std: 0.066
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.091  &   0.733  &   4.212  &   0.171  &   0.911  &   0.961  &   0.981  \\
+
+-> Done!
+=== weights_19 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_19
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.510 | std: 0.064
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.091  &   0.718  &   4.187  &   0.171  &   0.911  &   0.960  &   0.981  \\
+
+-> Done!
+=== weights_20 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_20
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.499 | std: 0.065
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.092  &   0.725  &   4.173  &   0.171  &   0.911  &   0.961  &   0.980  \\
+
+-> Done!
+=== weights_21 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_21
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.520 | std: 0.063
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.090  &   0.714  &   4.153  &   0.170  &   0.911  &   0.961  &   0.981  \\
+
+-> Done!
+=== weights_22 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_22
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.530 | std: 0.065
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.091  &   0.702  &   4.160  &   0.171  &   0.911  &   0.961  &   0.981  \\
+
+-> Done!
+=== weights_23 ===
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:135: UserWarning: Using 'weights' as positional parameter(s) is deprecated since 0.13 and may be removed in the future. Please use keyword parameter(s) instead.
+  warnings.warn(
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet50_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet50_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/kty2/anaconda3/envs/minsik/lib/python3.12/site-packages/torch/nn/modules/transformer.py:385: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.self_attn.batch_first was not True(use batch_first for better inference performance)
+  warnings.warn(
+-> Loading weights from logs/sqldepth_multiRes_0526/models/weights_23
+-> Computing predictions with size 1024x320
+-> Evaluating
+   Mono evaluation - using median scaling
+ Scaling ratios | med: 5.466 | std: 0.065
+
+   abs_rel |   sq_rel |     rmse | rmse_log |       a1 |       a2 |       a3 | 
+&   0.090  &   0.716  &   4.169  &   0.171  &   0.911  &   0.960  &   0.980  \\
+
+-> Done!

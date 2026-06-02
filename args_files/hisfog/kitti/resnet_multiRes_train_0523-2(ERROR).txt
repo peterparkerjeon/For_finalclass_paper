@@ -1,0 +1,24 @@
+--data_path /home/kty2/Lite-mono_code/kitti_data/
+--log_dir /home/kty2/SQLdepth_modify/For_finalclass_paper/logs
+--model_name sqldepth_multiRes_0523-2
+--dataset kitti
+--eval_split eigen
+--backbone resnet_lite
+--height_low 192
+--width_low 640
+--height 320
+--width 1024
+--batch_size 8
+--num_epochs 20
+--scheduler_step_size 15
+--num_layers 50
+--num_features 256
+--model_dim 32
+--patch_size 16
+--dim_out 64
+--query_nums 64
+--min_depth 0.001
+--max_depth 80.0
+--use_stereo
+--eval_mono
+--post_process

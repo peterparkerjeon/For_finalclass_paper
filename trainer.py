@@ -341,10 +341,16 @@ class Trainer:
             # Otherwise, we only feed the image with frame_id 0 through the depth encoder
             # Added to get high_resol_feature, Low_resol_feature, and merge it and get Depth.
             # Use different encoder for high, low => Seperate!
-            High_feature = checkpoint( self.models["encoder_high"], inputs["color_aug", 0, 0]) #320*1040
+            input_high = inputs["color_aug", 0, 0].requires_grad_(True)  # For Gradient Checkpointing
+
+            #High_feature = checkpoint( self.models["encoder_high"], inputs["color_aug", 0, 0]) #320*1040, original
+            High_feature = checkpoint( self.models["encoder_high"], input_high) # For Gradient Checkpointing
+
             Low_resol = F.interpolate(inputs["color_aug", 0, 0],
                           size=(self.opt.height_low, self.opt.width_low),
                           mode='bilinear', align_corners=False) # 192x640
+            Low_resol = Low_resol.requires_grad_(True)  # For Gradient Checkpointing
+
             Low_feature = checkpoint(self.models["encoder_low"], Low_resol) 
             #Here, We get each resolutions's feature map. 
 
