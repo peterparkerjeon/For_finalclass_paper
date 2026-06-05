@@ -379,7 +379,9 @@ class Trainer:
         self.generate_images_pred(inputs, outputs_high)
         losses_high = self.compute_losses(inputs, outputs_high)
 
-        outputs_low = self.models["depth"](Low_feature)
+        Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:],
+                               mode='bilinear', align_corners=False)
+        outputs_low = self.models["depth"](Low_feature_up)
         outputs_low.update(pose_outputs)
         self.generate_images_pred(inputs, outputs_low)
         losses_low = self.compute_losses(inputs, outputs_low)
