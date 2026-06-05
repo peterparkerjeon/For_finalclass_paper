@@ -375,7 +375,8 @@ class Trainer:
         # Seperate loss for each encoder
         pose_outputs = {k: v for k, v in outputs.items() 
                 if k[0] =="cam_T_cam" }
-
+        outputs_test = self.models["depth"](High_feature)
+        print("depth_decoder output keys:", list(outputs_test.keys())) #debug
         outputs_high = self.models["depth"](High_feature)
         outputs_high.update(pose_outputs)
         self.generate_images_pred(inputs, outputs_high)
