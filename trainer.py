@@ -371,26 +371,24 @@ class Trainer:
         losses = self.compute_losses(inputs, outputs)
 
         original_scales = self.opt.scales
-        self.opt.scales= [0,1,2]
+        self.opt.scales= [0]
         # Seperate loss for each encoder
         pose_outputs = {k: v for k, v in outputs.items() 
                 if k[0] =="cam_T_cam" }
-        outputs_test = self.models["depth"](High_feature)
-        print("depth_decoder output keys:", list(outputs_test.keys())) #debug
         outputs_high = self.models["depth"](High_feature)
         outputs_high.update(pose_outputs)
         self.generate_images_pred(inputs, outputs_high)
-        losses_high = self.compute_losses(inputs, outputs_high)
+        losses_high = self.compute_simple_loss(inputs, outputs_high)
 
         Low_feature_up = F.interpolate(Low_feature, size=High_feature.shape[2:],
                                mode='bilinear', align_corners=False)
         outputs_low = self.models["depth"](Low_feature_up)
         outputs_low.update(pose_outputs)
         self.generate_images_pred(inputs, outputs_low)
-        losses_low = self.compute_losses(inputs, outputs_low)
+        losses_low = self.compute_simple_loss(inputs, outputs_low)
         self.opt.scales = original_scales
 
-        losses["loss"] = losses["loss"] + 0.15 * losses_high["loss"] + 0.15 * losses_low["loss"]
+        losses["loss"] = losses["loss"] + 0.15 * losses_high+ 0.15 * losses_low
 
 
         return outputs, losses
@@ -548,6 +546,17 @@ class Trainer:
             reprojection_loss = 0.85 * ssim_loss + 0.15 * l1_loss
 
         return reprojection_loss
+
+    def compute_simple_loss(self, inputs, outputs):
+        
+        target = inputs[("color", 0, 0)]
+        reprojection_losses = []
+        for frame_id in self.opt.frame_ids[1:]:
+            pred = outputs[("color", frame_id, 0)]
+            reprojection_losses.append(torch.abs(target - pred).mean(1, keepdim=True))
+        reprojection_losses = torch.cat(reprojection_losses, 1)
+        to_optimise, _ = torch.min(reprojection_losses, dim=1)
+        return to_optimise.mean()
 
     def compute_losses(self, inputs, outputs):
         """Compute the reprojection and smoothness losses for a minibatch
