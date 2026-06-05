@@ -370,6 +370,23 @@ class Trainer:
         self.generate_images_pred(inputs, outputs)
         losses = self.compute_losses(inputs, outputs)
 
+        # Seperate loss for each encoder
+        pose_outputs = {k: v for k, v in outputs.items() 
+                if k[0] =="cam_T_cam" }
+
+        outputs_high = self.models["depth"](High_feature)
+        outputs_high.update(pose_outputs)
+        self.generate_images_pred(inputs, outputs_high)
+        losses_high = self.compute_losses(inputs, outputs_high)
+
+        outputs_low = self.models["depth"](Low_feature)
+        outputs_low.update(pose_outputs)
+        self.generate_images_pred(inputs, outputs_low)
+        losses_low = self.compute_losses(inputs, outputs_low)
+
+        losses["loss"] = losses["loss"] + 0.15 * losses_high["loss"] + 0.15 * losses_low["loss"]
+
+
         return outputs, losses
 
     def predict_poses(self, inputs, features):
