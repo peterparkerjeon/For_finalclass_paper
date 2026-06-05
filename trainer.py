@@ -370,6 +370,8 @@ class Trainer:
         self.generate_images_pred(inputs, outputs)
         losses = self.compute_losses(inputs, outputs)
 
+        original_scales = self.opt.scales
+        self.opt.scales= [0,1,2]
         # Seperate loss for each encoder
         pose_outputs = {k: v for k, v in outputs.items() 
                 if k[0] =="cam_T_cam" }
@@ -385,6 +387,7 @@ class Trainer:
         outputs_low.update(pose_outputs)
         self.generate_images_pred(inputs, outputs_low)
         losses_low = self.compute_losses(inputs, outputs_low)
+        self.opt.scales = original_scales
 
         losses["loss"] = losses["loss"] + 0.15 * losses_high["loss"] + 0.15 * losses_low["loss"]
 
