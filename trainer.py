@@ -385,10 +385,10 @@ class Trainer:
         outputs_low = self.models["depth"](Low_feature_up)
         outputs_low.update(pose_outputs)
         self.generate_images_pred(inputs, outputs_low)
-        losses_low = self.compute_simple_loss(inputs, outputs_low)
+        losses_low = self.compute_simple_loss(inputs, outputs_low, blur=True)     # we do blur
         self.opt.scales = original_scales
 
-        losses["loss"] = losses["loss"] + 0.15 * losses_high+ 0.15 * losses_low
+        losses["loss"] = losses["loss"] + 0.1 * losses_high+ 0.2 * losses_low # give more to low
 
 
         return outputs, losses
@@ -547,12 +547,28 @@ class Trainer:
 
         return reprojection_loss
 
-    def compute_simple_loss(self, inputs, outputs):
-        
+    def gaussian_blur(self, x, kernel_size=11, sigma=3.0):
+        """Apply low-pass filter (Gaussian blur) to an image"""
+        import math
+        channels = x.shape[1]
+        coords = torch.arange(kernel_size, dtype=torch.float32, device=x.device) - kernel_size // 2
+        g = torch.exp(-(coords ** 2) / (2 * sigma ** 2))
+        g = g / g.sum()
+        kernel_2d = g[:, None] * g[None, :]
+        kernel_2d = kernel_2d.expand(channels, 1, kernel_size, kernel_size)
+        x_blur = F.conv2d(x, kernel_2d, padding=kernel_size // 2, groups=channels)
+        return x_blur
+
+
+    def compute_simple_loss(self, inputs, outputs, blur=False):
         target = inputs[("color", 0, 0)]
+        if blur:
+            target = self.gaussian_blur(target)
         reprojection_losses = []
         for frame_id in self.opt.frame_ids[1:]:
             pred = outputs[("color", frame_id, 0)]
+            if blur:
+                pred = self.gaussian_blur(pred)
             reprojection_losses.append(torch.abs(target - pred).mean(1, keepdim=True))
         reprojection_losses = torch.cat(reprojection_losses, 1)
         to_optimise, _ = torch.min(reprojection_losses, dim=1)
